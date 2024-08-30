@@ -7,4 +7,16 @@ pipeline {
                 sh 'go version'
             }
         }
+         stage('k6') {
+            agent {
+                docker {
+                    image 'grafana/k6'
+                    args '--entrypoint=""'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh 'k6 run script.js --quiet'
+            }
+        }
 }
