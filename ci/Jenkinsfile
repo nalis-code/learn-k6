@@ -3,12 +3,14 @@ pipeline {
     agent { dockerfile true }
 
     stages {
-        stage('Run Tests') {
+        stage('go tests'){
             steps {
-                    // Run commands inside the container
-                    sh 'go version'         // Run Go commands
-                    sh 'k6 version'        // Verify k6 installation
-
+                    sh 'go test -v'
+            }
+        }
+        stage('k6 Tests') {
+            steps {
+                    sh 'k6 run tests/smoke-test.js'
             }
         }
     }
