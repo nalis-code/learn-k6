@@ -1,24 +1,14 @@
 pipeline {
     agent {
         docker {
-            image 'fedora:latest'
+            image 'my-fedora-k6'
         }
     }
-    
+
     stages {
-        stage('Install K6') {
-            steps {
-                sh '''
-                    # Install k6 from the repository
-                    dnf install -y https://dl.k6.io/rpm/repo.rpm
-                    dnf install -y k6
-                '''
-            }
-        }
         stage('Run K6') {
             steps {
                 sh 'k6 version'  // Verify the installation
-                // Add your k6 commands here
             }
         }
     }
