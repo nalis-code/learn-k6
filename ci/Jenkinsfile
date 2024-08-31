@@ -1,8 +1,14 @@
 /* Requires the Docker Pipeline plugin */
 pipeline {
-    agent { docker { image 'golang:1.23.0-alpine3.20' } }
+     agent any
+
     stages {
         stage('build') {
+            agent { 
+                docker { 
+                    image 'golang:1.23.0-alpine3.20' 
+                    } 
+                }
             steps {
                 sh 'go version'
             }
@@ -16,7 +22,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'k6 run script.js --quiet'
+                sh 'k6'
             }
         }
 }
