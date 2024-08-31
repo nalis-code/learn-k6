@@ -4,23 +4,11 @@ pipeline {
 
     stages {
         stage('build') {
-            agent { 
-                docker { 
-                    image 'golang:1.23.0-alpine3.20' 
-                    } 
-                }
             steps {
                 sh 'go version'
             }
         }
          stage('k6') {
-            agent {
-                docker {
-                    image 'grafana/k6'
-                    args '--entrypoint=""'
-                    reuseNode true
-                }
-            }
             steps {
                 sh 'k6'
             }
