@@ -1,41 +1,24 @@
 pipeline {
     agent {
         docker {
-            image 'ubuntu:latest'
+            image 'fedora:latest'
         }
     }
-
+    
     stages {
-        stage('install K6') {
+        stage('Install K6') {
             steps {
                 sh '''
-                    # Ensure correct permissions
-                    mkdir -p /var/lib/apt/lists/partial
-                    chmod -R 755 /var/lib/apt/lists
-
-                    # Update the package list
-                    apt-get update
-
-                    # Install necessary tools
-                    apt-get install -y gnupg2 curl
-
-                    # Add the GPG key
-                    gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
-
-                    # Add the k6 repository
-                    echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | tee /etc/apt/sources.list.d/k6.list
-
-                    # Update the package list again
-                    apt-get update
-
-                    # Install k6
-                    apt-get install -y k6
+                    # Install k6 from the repository
+                    dnf install -y https://dl.k6.io/rpm/repo.rpm
+                    dnf install -y k6
                 '''
             }
         }
-        stage('k6') {
+        stage('Run K6') {
             steps {
                 sh 'k6 version'  // Verify the installation
+                // Add your k6 commands here
             }
         }
     }
