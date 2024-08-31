@@ -6,11 +6,14 @@ pipeline {
     }
 
     stages {
-        stage('build') {
+        stage('install K6') {
             steps {
-                sh 'uname -a'  // Check the Linux environment
-                sh 'go version'  // Assuming Go is installed in the Docker image
-            }
+               sh(
+                    '''
+                    sudo dnf install -y https://dl.k6.io/rpm/repo.rpm
+                    sudo dnf install -y k6
+                    ''')
+                }
         }
         stage('k6') {
             steps {
