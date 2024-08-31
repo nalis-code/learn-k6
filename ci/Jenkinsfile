@@ -1,17 +1,21 @@
-/* Requires the Docker Pipeline plugin */
 pipeline {
-     agent any
+    agent {
+        docker {
+            image 'ubuntu:latest'  // or any other Linux-based Docker image
+        }
+    }
 
     stages {
         stage('build') {
             steps {
-                sh 'go version'
+                sh 'uname -a'  // Check the Linux environment
+                sh 'go version'  // Assuming Go is installed in the Docker image
             }
         }
-         stage('k6') {
+        stage('k6') {
             steps {
-                sh 'k6'
+                sh 'k6 version'  // Assuming k6 is installed in the Docker image
             }
         }
-}
+    }
 }
