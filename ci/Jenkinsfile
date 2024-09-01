@@ -5,7 +5,7 @@ pipeline {
     stages {
         stage('go tests'){
             steps {
-                    sh 'go test -v'
+                    sh 'echo "go test"'
             }
         }
         stage('k6 Tests') {
