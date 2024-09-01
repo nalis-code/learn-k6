@@ -3,21 +3,23 @@ pipeline {
     agent { dockerfile true }
 
     stages {
-        
-        stage('install K6'){
+        stage('prepare'){
+            steps{
+                sh 'make deps'
+            }
+        }
+        stage('Tests'){
+            parallel{
+                stage('functional Tests') {
             steps {
-                    sh(
-      '''
-      sudo dnf install -y https://dl.k6.io/rpm/repo.rpm
-      sudo dnf install -y k6
-      ''')
+                    sh 'make run-functional-tests'
             }
         }
         stage('performance Tests') {
             steps {
-                    sh 'k6 run tests/smoke-test.js'
+                    sh 'make run-k6-smoke-test'
             }
         }
-        
+            }
     }
 }
