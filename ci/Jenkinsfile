@@ -1,6 +1,10 @@
 pipeline {
     agent { dockerfile true }
 
+    environment {
+        GOCACHE = '/workspace/.cache/go-build'  // Set GOCACHE to a writable directory
+    }
+
     stages {
         stage('Prepare') {
             steps {

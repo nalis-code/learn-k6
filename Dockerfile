@@ -11,8 +11,8 @@ RUN dnf install -y https://dl.k6.io/rpm/repo.rpm && \
 # Set up the working directory
 WORKDIR /workspace
 
-# Change permissions of the /go directory
-RUN mkdir -p /go && chmod -R 777 /go
+# Ensure the /workspace directory is writable
+RUN mkdir -p /workspace/.cache/go-build && chmod -R 777 /workspace
 
 # Set the user to root (default)
 USER root
