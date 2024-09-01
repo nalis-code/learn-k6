@@ -1,25 +1,25 @@
 pipeline {
-
     agent { dockerfile true }
 
     stages {
-        stage('prepare'){
-            steps{
+        stage('Prepare') {
+            steps {
                 sh 'make deps'
             }
         }
-        stage('Tests'){
-            parallel{
-                stage('functional Tests') {
-            steps {
-                    sh 'make run-functional-tests'
+        stage('Tests') {
+            parallel {
+                stage('Functional Tests') {
+                    steps {
+                        sh 'make run-functional-tests'
+                    }
+                }
+                stage('Performance Tests') {
+                    steps {
+                        sh 'make run-k6-smoke-test'
+                    }
+                }
             }
         }
-        stage('performance Tests') {
-            steps {
-                    sh 'make run-k6-smoke-test'
-            }
-        }
-            }
     }
 }
