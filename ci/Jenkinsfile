@@ -3,15 +3,18 @@ pipeline {
     agent { dockerfile true }
 
     stages {
-        stage('go tests'){
+        parallel[(
+        stage('functional tests'){
             steps {
                     sh 'echo "go test"'
             }
         }
-        stage('k6 Tests') {
+        stage('performance Tests') {
             steps {
                     sh 'k6 run tests/smoke-test.js'
             }
         }
+        )]
+        
     }
 }
