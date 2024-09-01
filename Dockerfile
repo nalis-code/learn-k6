@@ -11,11 +11,14 @@ RUN dnf install -y https://dl.k6.io/rpm/repo.rpm && \
 # Set up the working directory
 WORKDIR /workspace
 
-# Change permissions of the /go directory or run as root
+# Change permissions of the /go directory
 RUN mkdir -p /go && chmod -R 777 /go
 
 # Set the user to root (default)
 USER root
+
+# Set GOCACHE environment variable to a writable directory
+ENV GOCACHE=/workspace/.cache/go-build
 
 # Copy the current directory contents into the container at /workspace
 COPY . /workspace
