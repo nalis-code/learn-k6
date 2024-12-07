@@ -1,31 +1,18 @@
 pipeline {
     agent any
-    environment {
-        PATH = "/usr/local/go/bin:${env.PATH}" // Ensures Go is available in all stages
-    }
     stages {
         stage('Install Go') {
             steps {
                 script {
-                    // Clean and install Go using Makefile
-                    sh 'make clean-go'
-                    sh 'make install-go'
+                    sh 'sudo make clean-go'
+                    sh 'sudo make install-go'
                 }
             }
         }
         stage('Verify Go Installation') {
             steps {
                 script {
-                    // Verify Go installation
                     sh 'make verify-go'
-                }
-            }
-        }
-        stage('Run Go Commands') {
-            steps {
-                script {
-                    // Example of using Go after installation
-                    sh 'go version'
                 }
             }
         }
