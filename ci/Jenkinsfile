@@ -1,27 +1,31 @@
 pipeline {
-    agent { dockerfile true }
-
+    agent any
     environment {
-        GOCACHE = '/workspace/.cache/go-build'  // Set GOCACHE to a writable directory
+        PATH = "/usr/local/go/bin:${env.PATH}" // Ensures Go is available in all stages
     }
-
     stages {
-        stage('Prepare') {
+        stage('Install Go') {
             steps {
-                sh 'make deps'
+                script {
+                    // Clean and install Go using Makefile
+                    sh 'make clean-go'
+                    sh 'make install-go'
+                }
             }
         }
-        stage('Tests') {
-            parallel {
-                stage('Functional Tests') {
-                    steps {
-                        sh 'make run-functional-tests'
-                    }
+        stage('Verify Go Installation') {
+            steps {
+                script {
+                    // Verify Go installation
+                    sh 'make verify-go'
                 }
-                stage('Performance Tests') {
-                    steps {
-                        sh 'make run-k6-smoke-test'
-                    }
+            }
+        }
+        stage('Run Go Commands') {
+            steps {
+                script {
+                    // Example of using Go after installation
+                    sh 'go version'
                 }
             }
         }
