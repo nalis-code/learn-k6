@@ -1,33 +1,17 @@
 pipeline {
-    agent any
-    environment {
-        PATH = "/usr/local/go/bin:${env.PATH}" // Ensures Go is available in all stages
+  // Run on an agent where we want to use Go
+  agent any
+
+  // Ensure the desired Go version is installed for all stages,
+  // using the name defined in the Global Tool Configuration
+  tools { go '1.23.4' }
+
+  stages {
+    stage('Build') {
+      steps {
+        // Output will be something like "go version go1.19 darwin/arm64"
+        sh 'go version'
+      }
     }
-    stages {
-        stage('Install Go') {
-            steps {
-                script {
-                    // Clean and install Go using Makefile
-                    sh 'make clean-go'
-                    sh 'make install-go'
-                }
-            }
-        }
-        stage('Verify Go Installation') {
-            steps {
-                script {
-                    // Verify Go installation
-                    sh 'make verify-go'
-                }
-            }
-        }
-        stage('Run Go Commands') {
-            steps {
-                script {
-                    // Example of using Go after installation
-                    sh 'go version'
-                }
-            }
-        }
-    }
+  }
 }
