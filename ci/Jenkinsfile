@@ -5,14 +5,16 @@ pipeline {
   // Ensure the desired Go version is installed for all stages,
   // using the name defined in the Global Tool Configuration
   tools { go '1.23.4' }
+  environment {
+    GOPATH="${env.WORKSPACE}/go"
+    GOBIN="${root}/bin" 
+    PATH="${PATH}:${GOROOT}/bin:${GOPATH}:${GOBIN}"
+  }
 
    stages {
         stage('Prepare') {
             steps {
                 sh 'make deps'
-                sh "echo ${GOROOT}"
-                sh "echo ${PATH}"
-                
             }
         }
         stage('Tests') {
