@@ -26,17 +26,8 @@ pipeline {
         }
         stage('Performance Tests') {
             steps {
-                sh(
-                '''
-                sudo dnf install -y https://dl.k6.io/rpm/repo.rpm
-                sudo dnf install -y k6
-                ''')
-                try{
-                    sh 'make run-k6-smoke-tests'
-                } catch (e) {
-                    currentBuild.result = 'UNSTABLE'
-                } finally {
-                }          
+                sh 'make install-k6'
+                sh 'make run-k6-smoke-tests'       
             }                
         }
     }
