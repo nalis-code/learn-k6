@@ -7,7 +7,7 @@ pipeline {
   tools { go '1.23.4' }
   environment {
     GOPATH="${env.WORKSPACE}/go"
-    GOBIN="${root}/bin" 
+    GOBIN="${GOPATH}/bin" 
     PATH="${PATH}:${GOROOT}/bin:${GOPATH}:${GOBIN}"
   }
 
