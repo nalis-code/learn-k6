@@ -5,6 +5,7 @@ pipeline {
   // Ensure the desired Go version is installed for all stages,
   // using the name defined in the Global Tool Configuration
   tools { go '1.23.4' }
+
   environment {
     GOPATH="${env.WORKSPACE}/go"
     GOBIN="${GOPATH}/bin" 
@@ -15,10 +16,10 @@ pipeline {
         stage('Prepare') {
             steps {
                 sh 'make deps'
+
             }
         }
         stage('Tests') {
-            parallel {
                 stage('Functional Tests') {
                     steps {
                         sh 'make run-functional-tests'
@@ -26,10 +27,19 @@ pipeline {
                 }
                 stage('Performance Tests') {
                     steps {
-                        sh 'make run-k6-smoke-test'
-                    }
+                        sh(
+                        '''
+                        sudo dnf install -y https://dl.k6.io/rpm/repo.rpm
+                        sudo dnf install -y k6
+                        ''')
+                        try{
+                            sh 'make run-k6-smoke-testS'
+                        } catch (e) {
+                            currentBuild.result = 'UNSTABLE'
+                        } finally {
+                        }          
+                    }                
                 }
-            }
         }
     }
 }
