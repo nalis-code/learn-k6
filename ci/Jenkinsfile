@@ -26,7 +26,10 @@ pipeline {
         }
         stage('Performance Tests') {
             steps {
-                sh 'make install-k6'
+                echo 'Installing k6'
+                sh 'sudo chmod +x setup_k6.sh'
+                sh 'sudo ./setup_k6.sh'
+                echo 'Running K6 performance tests...'
                 sh 'make run-k6-smoke-tests'       
             }                
         }
