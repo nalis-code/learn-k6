@@ -19,27 +19,25 @@ pipeline {
 
             }
         }
-        stage('Tests') {
-                stage('Functional Tests') {
-                    steps {
-                        sh 'make run-functional-tests'
-                    }
-                }
-                stage('Performance Tests') {
-                    steps {
-                        sh(
-                        '''
-                        sudo dnf install -y https://dl.k6.io/rpm/repo.rpm
-                        sudo dnf install -y k6
-                        ''')
-                        try{
-                            sh 'make run-k6-smoke-testS'
-                        } catch (e) {
-                            currentBuild.result = 'UNSTABLE'
-                        } finally {
-                        }          
-                    }                
-                }
+        stage('Functional Tests') {
+            steps {
+                sh 'make run-functional-tests'
+            }
+        }
+        stage('Performance Tests') {
+            steps {
+                sh(
+                '''
+                sudo dnf install -y https://dl.k6.io/rpm/repo.rpm
+                sudo dnf install -y k6
+                ''')
+                try{
+                    sh 'make run-k6-smoke-tests'
+                } catch (e) {
+                    currentBuild.result = 'UNSTABLE'
+                } finally {
+                }          
+            }                
         }
     }
 }
