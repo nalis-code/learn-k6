@@ -26,8 +26,6 @@ pipeline {
         }
         stage('Performance Tests') {
             steps {
-                echo 'Installing k6'
-                sh 'make install-k6'
                 echo 'Running K6 performance tests...'
                 sh 'make run-k6-smoke-tests'       
             }                
