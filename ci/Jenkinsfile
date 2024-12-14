@@ -1,32 +1,35 @@
-/* Requires the Docker Pipeline plugin */
 pipeline {
-     agent any
+    agent any
 
     stages {
-        stage('build') {
-            agent { 
-                docker { 
-                    image 'golang:1.23.0-alpine3.20' 
-                    } 
+        stage('Build and Functional Tests') {
+            agent {
+                docker {
+                    image 'golang:1.23.0-alpine3.20'
                 }
+            }
+            steps {
+                script {
+                    // Build Go application
+                    sh 'make deps'
+
+                    // Run functional tests
+                    sh 'make run-functional-tests'
+                }
+            }
+        }
+
+        stage('Performance Tests') {
             agent {
                 docker {
                     image 'grafana/k6'
-                    args '--entrypoint=""'
-                    reuseNode true
+                    args '--entrypoint=""' // Override default entrypoint
                 }
             }
-        }
-        stage('Functional Tests') {
-            steps {
-                sh 'make run-functional-tests'
-            }
-        }
-        stage('Performance Tests') {
             steps {
                 echo 'Running K6 performance tests...'
-                sh 'make run-k6-smoke-tests'       
-            }                
+                sh 'make run-k6-smoke-tests'
+            }
         }
-}
+    }
 }
