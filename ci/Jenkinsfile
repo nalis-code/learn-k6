@@ -1,22 +1,20 @@
+/* Requires the Docker Pipeline plugin */
 pipeline {
-  // Run on an agent where we want to use Go
-  agent any
+     agent any
 
-  // Ensure the desired Go version is installed for all stages,
-  // using the name defined in the Global Tool Configuration
-  tools { go '1.23.4' }
-
-  environment {
-    GOPATH="${env.WORKSPACE}/go"
-    GOBIN="${GOPATH}/bin" 
-    PATH="${PATH}:${GOROOT}/bin:${GOPATH}:${GOBIN}"
-  }
-
-   stages {
-        stage('Prepare') {
-            steps {
-                sh 'make deps'
-
+    stages {
+        stage('build') {
+            agent { 
+                docker { 
+                    image 'golang:1.23.0-alpine3.20' 
+                    } 
+                }
+            agent {
+                docker {
+                    image 'grafana/k6'
+                    args '--entrypoint=""'
+                    reuseNode true
+                }
             }
         }
         stage('Functional Tests') {
@@ -30,5 +28,5 @@ pipeline {
                 sh 'make run-k6-smoke-tests'       
             }                
         }
-    }
+}
 }
