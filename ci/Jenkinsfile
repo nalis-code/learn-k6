@@ -1,44 +1,29 @@
 pipeline {
-    agent any
+  agent any
 
-    stages {
-        stage('Install K6') {
+  environment {
+    GOPATH="${env.WORKSPACE}/go"
+    GOBIN="${GOPATH}/bin" 
+    PATH="/usr/local/go"
+  }
+
+   stages {
+        stage('Prepare') {
             steps {
-                sh '''
-                # Debug: Check workspace and current directory
-                echo "Current Directory: $(pwd)"
-                echo "Workspace Contents Before Download:"
-                ls -la
-                
-                # Download K6 binary
-                curl -LO https://github.com/grafana/k6/releases/download/v0.45.0/k6-v0.45.0-linux-amd64.tar.gz
+                sh 'make deps'
 
-                # Debug: Ensure file was downloaded
-                echo "Workspace Contents After Download:"
-                ls -la
-
-                # Create directory and extract
-                mkdir -p k6
-                tar -xzf k6-v0.45.0-linux-amd64.tar.gz -C k6
-
-                # Debug: Check contents of k6 directory
-                echo "K6 Directory Contents:"
-                ls -la k6/
-                '''
             }
         }
-
-        stage('Run Performance Tests') {
+        stage('Functional Tests') {
             steps {
-                sh '''
-                # Debug: Check if K6 binary is executable and run version check
-                chmod +x k6/k6
-                ./k6/k6 version
-
-                # Run smoke tests
-                ./k6/k6 run smoke-test.js
-                '''
+                sh 'make run-functional-tests'
             }
+        }
+        stage('Performance Tests') {
+            steps {
+                sh 'make run-k6-smoke-tests'       
+            }                
         }
     }
 }
+
