@@ -4,7 +4,7 @@ pipeline {
     environment {
         GOPATH = "${env.WORKSPACE}/go"
         GOBIN = "${GOPATH}/bin" 
-        PATH = "/usr/local/go/bin:${env.PATH}" // Append Go's binary directory to existing PATH
+        PATH = "${GOPATH}:${GOBIN}:/usr/local/go/bin:${env.PATH}" // Append Go's binary directory to existing PATH
     }
 
     stages {
