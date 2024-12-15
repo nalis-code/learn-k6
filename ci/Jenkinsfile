@@ -1,17 +1,16 @@
 pipeline {
-  agent any
+    agent any
 
-  environment {
-    GOPATH="${env.WORKSPACE}/go"
-    GOBIN="${GOPATH}/bin" 
-    PATH="/usr/local/go"
-  }
+    environment {
+        GOPATH = "${env.WORKSPACE}/go"
+        GOBIN = "${GOPATH}/bin" 
+        PATH = "/usr/local/go/bin:${env.PATH}" // Append Go's binary directory to existing PATH
+    }
 
-   stages {
+    stages {
         stage('Prepare') {
             steps {
                 sh 'make deps'
-
             }
         }
         stage('Functional Tests') {
@@ -26,4 +25,3 @@ pipeline {
         }
     }
 }
-
